@@ -1,4 +1,4 @@
-# Single cell viewer for apis melliefera
+# Single cell viewer for apis mellifera
 
 Taking all published single cell works in honey bees and compiling into one large dataset that can
 be interactively explored
