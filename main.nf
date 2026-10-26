@@ -1,10 +1,16 @@
 
-/*
-* Pipeline parameters
-*/
-params {
-    //path to sra identifiers
-    sra_input: Path = 'sra_csv.csv'
+process writeSraIdents {
+
+    input:
+    path bash_script
+
+    output:
+    path "sra_ident.csv"
+
+    script:
+    """
+    bash ${bash_script}
+    """
 }
 
 process printSra {
@@ -25,8 +31,15 @@ process printSra {
 workflow {
 
     main:
-    // create channgel for inputs
-    sra_ch = channel.fromPath(params.sra_input)
+
+    //Create path object for bash script that creates ident csv
+    write_sra_script = file('./write_sra_csv.sh')
+
+    // write all sra identifiers from bash script
+    writeSraIdents(write_sra_script)
+
+    // create channel for inputs
+    sra_ch = writeSraIdents.out
                     .splitCsv()
                     .flatten()
                     .view()
@@ -34,4 +47,13 @@ workflow {
     // print sra values to check function
     printSra(sra_ch)
 
+    publish:
+    sra_csv = writeSraIdents.out
+
+}
+
+output {
+    sra_csv {
+        path '.'
+    }
 }
