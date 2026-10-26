@@ -13,17 +13,17 @@ process writeSraIdents {
     """
 }
 
-process printSra {
+process run_prefetch {
 
     input:
     val sra_ident
 
     output:
-    path "${sra_ident}-output.txt"
+    path "${sra_ident}_prefetch"
 
     script:
     """
-    echo '${sra_ident}' > '${sra_ident}-output.txt'
+    prefetch ${sra_ident}
     """
 }
 
@@ -38,22 +38,27 @@ workflow {
     // write all sra identifiers from bash script
     writeSraIdents(write_sra_script)
 
-    // create channel for inputs
-    sra_ch = writeSraIdents.out
+    // create flattened array for inputs into prefetch
+    sra_array = writeSraIdents.out
                     .splitCsv()
                     .flatten()
-                    .view()
 
     // print sra values to check function
-    printSra(sra_ch)
+    run_prefetch(sra_array)
+                    .view()
 
     publish:
     sra_csv = writeSraIdents.out
+    prefetch_files = run_prefetch.out
 
 }
 
 output {
     sra_csv {
         path '.'
+    }
+
+    prefetch_files {
+        path "prefetch_res"
     }
 }
