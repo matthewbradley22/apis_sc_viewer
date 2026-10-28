@@ -9,7 +9,7 @@ for i in `seq 871 920`;
             printf "SRR15990${i}" >> ./sra_ident.csv; 
 
         else
-            printf "SRR15990${i}," >> ./sra_ident.csv; 
+            printf "SRR15990${i}\n" >> ./sra_ident.csv; 
         fi
    done
 
