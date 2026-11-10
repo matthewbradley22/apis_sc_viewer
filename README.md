@@ -3,7 +3,7 @@
 Taking all published single cell works in honey bees and compiling into one large dataset that can
 be interactively explored
 
-## Why not all in a single nextflow script?
+## Why not all steps in a single nextflow script?
 
 The prefetch calls leads to many terabytes of data, more feasible for most users 
 to gradually prefetch and process data with cellranger in chunks. Not super
